@@ -95,3 +95,10 @@ export function toast(msg, { error = false } = {}) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.className = ''; }, error ? 8000 : 3500);
 }
+
+// Brief right/wrong flash after a trial. Text, not colour alone, carries the result.
+export async function feedback(el, ok, detail = '', ms = 700) {
+  el.replaceChildren(h('div', { class: `big ${ok ? 'good' : 'bad'}` }, ok ? 'Correct' : 'Wrong'),
+    ...(detail ? [h('p', detail)] : []));
+  await wait(ok ? ms : ms * 2);
+}
