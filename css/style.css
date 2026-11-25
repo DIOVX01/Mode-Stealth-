@@ -125,3 +125,17 @@ form.panel label { margin: var(--s-2) 0 0; }
 .scores dt { color: var(--muted); }
 .scores dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
 .session-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; }
+.hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--s-4); align-items: end; padding: var(--s-4) 0 var(--s-3); }
+.hero p { margin: 0; }
+.hero-action { justify-self: end; }
+.cta { min-height: 56px; padding-inline: var(--s-5); font-size: 18px; }
+.big-line { font-size: 20px; font-weight: 600; margin: 0; }
+.nag { padding: var(--s-3) var(--s-4); border: 1px solid var(--warn); border-radius: var(--r-1); color: var(--text); max-width: none; }
+table.data { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+table.data th, table.data td { text-align: left; padding: var(--s-2) var(--s-3) var(--s-2) 0; border-bottom: 1px solid var(--line); font-weight: 400; }
+table.data thead th { color: var(--muted); font-size: 15px; }
+table.data tbody th { font-weight: 600; }
+.spark { color: var(--signal); vertical-align: middle; overflow: visible; }
+.spark polyline { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.spark circle { fill: currentColor; }
+.row.start { justify-content: flex-start; }

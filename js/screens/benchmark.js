@@ -47,7 +47,7 @@ export async function runBenchmark(el, ctx) {
   await new Promise(resolve => {
     const btn = h('button', { type: 'button', class: 'primary', onclick: resolve }, 'Continue');
     el.replaceChildren(h('h2', 'Benchmark saved'),
-      h('dl', { class: 'scores' }, BENCH_TESTS.map(t => [h('dt', t.label), h('dd', scores[t.id] + ' ' + t.unit)])),
+      h('dl', { class: 'scores' }, BENCH_TESTS.map(t => [h('dt', t.label), h('dd', t.unit === '%' ? scores[t.id] + '%' : scores[t.id] + ' ' + t.unit)])),
       btn);
     btn.focus();
   });
