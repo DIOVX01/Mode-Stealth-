@@ -52,6 +52,10 @@ export function render(el, ctx) {
     ...(corrupt.length ? [h('div',
       h('h2', 'Unreadable data'),
       h('p', 'This data could not be read when HiveMind started. It was kept, untouched. Download it before doing anything else.'),
-      corrupt.map(k => h('button', { type: 'button', onclick: () => download('hivemind-unreadable-' + k.split('-').pop() + '.json', localStorage.getItem(k)) },
-        'Download copy saved ' + new Date(+k.split('-').pop()).toLocaleString())))] : []));
+      corrupt.map(k => {
+        const when = new Date(+k.split('-').pop()).toLocaleString();
+        return h('div', { class: 'row start' },
+          h('button', { type: 'button', onclick: () => download('hivemind-unreadable-' + k.split('-').pop() + '.json', localStorage.getItem(k)) }, 'Download copy saved ' + when),
+          h('button', { type: 'button', onclick: () => { if (confirm('Delete the copy saved ' + when + '? Download it first if you might need it.')) { localStorage.removeItem(k); ctx.go('#/backup?d=' + Date.now()); } } }, 'Delete copy'));
+      }))] : []));
 }

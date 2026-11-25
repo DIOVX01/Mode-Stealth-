@@ -43,7 +43,7 @@ export async function runBenchmark(el, ctx) {
   scores.changed = await part('What changed?', b => changed.bench(b, r));
   scores.cups = await part('Cups tracking', b => cups.bench(b, r));
   if (!el.isConnected) return;
-  ctx.commit({ ...ctx.state, benchmarks: [...ctx.state.benchmarks, { day: ctx.today(), scores }] });
+  if (!ctx.commit({ ...ctx.state, benchmarks: [...ctx.state.benchmarks, { day: ctx.today(), scores }] })) return false;
   await new Promise(resolve => {
     const btn = h('button', { type: 'button', class: 'primary', onclick: resolve }, 'Continue');
     el.replaceChildren(h('h2', 'Benchmark saved'),
@@ -51,4 +51,5 @@ export async function runBenchmark(el, ctx) {
       btn);
     btn.focus();
   });
+  return true;
 }

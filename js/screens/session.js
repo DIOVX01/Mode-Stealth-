@@ -44,7 +44,7 @@ export async function render(el, ctx) {
     stage.append(h('p', 'Today’s session is already complete.'), h('a', { class: 'button primary', href: '#/' }, 'Dashboard'));
     return;
   }
-  ctx.commit(startDay(ctx.state, today));
+  if (!ctx.commit(startDay(ctx.state, today))) return;
   const plan = ctx.state.sessions.find(s => s.day === today)?.plan ?? steps;
   const r = rng(Date.now() >>> 0);
   let cue = null;
@@ -88,10 +88,10 @@ export async function render(el, ctx) {
         if (hit !== null) next = recordDrill(next, 'cue', { correct: hit ? 1 : 0, total: 1, ms: 0, level: 0 }, today);
         armed = null;
       }
-      ctx.commit(next);
+      if (!ctx.commit(next)) return;
     }
     if (!el.isConnected) return;
-    ctx.commit(markDone(ctx.state, id, today));
+    if (!ctx.commit(markDone(ctx.state, id, today))) return;
   }
   title.textContent = 'Today’s session';
   progress.textContent = '';

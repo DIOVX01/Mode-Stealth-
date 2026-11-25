@@ -67,7 +67,7 @@ export async function runReviews(el, ctx) {
     }
     if (!el.isConnected) return;
     const updated = review(card, g, ctx.today());
-    ctx.commit({ ...next, cards: next.cards.map(c => (c.id === card.id ? updated : c)) });
+    if (!ctx.commit({ ...next, cards: next.cards.map(c => (c.id === card.id ? updated : c)) })) return;
   }
   el.replaceChildren(h('p', 'All ' + due.length + ' due cards reviewed.'));
   await wait(1200);

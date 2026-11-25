@@ -60,3 +60,13 @@ test('startDay leaves an existing record alone', () => {
   const s = markDone(st(), 'benchmark', T);
   assert.equal(startDay(s, T), s);
 });
+
+test('a benchmark saved today counts as done when the session resumes', () => {
+  let s = startDay(st(), T); s = { ...s, benchmarks: [{ day: T, scores: {} }] };
+  assert.equal(buildSteps(s, T)[0], 'cue');
+});
+test('the day completes even if the benchmark step itself was never marked done', () => {
+  let s = startDay(st(), T); s = { ...s, benchmarks: [{ day: T, scores: {} }] };
+  for (const id of ['cue', 'reviews', ...DRILLS]) s = markDone(s, id, T);
+  assert.equal(s.sessions.at(-1).completed, true);
+});

@@ -7,8 +7,7 @@ export async function render(el, ctx) {
   if (ctx.params.query.get('step') === 'benchmark') {
     const stage = h('div', { class: 'stage' });
     el.append(h('h1', 'Day 1 baseline'), h('p', 'Every later benchmark is compared with these scores.'), stage);
-    await runBenchmark(stage, ctx);
-    if (el.isConnected) ctx.go('#/');
+    if (await runBenchmark(stage, ctx) && el.isConnected) ctx.go('#/');
     return;
   }
   const start = h('button', {

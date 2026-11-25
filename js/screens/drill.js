@@ -18,7 +18,7 @@ export async function render(el, ctx) {
     throw e;
   }
   if (!el.isConnected) return;
-  ctx.commit(recordDrill(ctx.state, id, res, ctx.today()));
+  if (!ctx.commit(recordDrill(ctx.state, id, res, ctx.today()))) return;
   stage.replaceChildren(
     h('div', { class: 'big' }, `${res.correct} / ${res.total}`),
     h('p', `Level ${level.toFixed(2)} to ${res.level.toFixed(2)}`),

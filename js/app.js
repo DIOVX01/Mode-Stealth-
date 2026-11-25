@@ -1,13 +1,16 @@
-import { load, save } from './store.js';
+import { KEY, load, save } from './store.js';
 import { dayKey } from './day.js';
-import { toast } from './ui.js';
 
 const root = document.getElementById('app');
-const { state, error } = load(localStorage);
+const banner = document.getElementById('banner');
+const showBanner = text => { banner.hidden = false; banner.textContent = text; };
+
+const { state, error, raw, readOnly } = load(localStorage);
+let lastRaw = raw; // what this tab last read or wrote; a mismatch means another tab saved newer data
 if (error) {
-  const b = document.getElementById('banner');
-  b.hidden = false;
-  b.textContent = 'Saved data couldn’t be read. It was kept as a backup copy in browser storage; export it from Backup before doing anything else.';
+  showBanner(readOnly
+    ? 'Saved data couldn’t be read, and browser storage is too full to keep a safety copy. Saving is turned off so it is not overwritten. Open Backup and download it.'
+    : 'Saved data couldn’t be read. It was kept as a backup copy in browser storage; download it from Backup before doing anything else.');
 }
 
 const ctx = {
@@ -15,13 +18,19 @@ const ctx = {
   params: {},
   today: () => dayKey(),
   commit(next) {
-    const r = save(next, localStorage);
-    if (!r.ok) { toast(r.error, { error: true }); return false; }
+    if (readOnly) { showBanner('Saving is turned off to protect unreadable data. Open Backup and download it.'); return false; }
+    const r = save(next, localStorage, lastRaw);
+    if (r.stale) { location.reload(); return false; }
+    if (!r.ok) { showBanner('Not saved: ' + r.error + ' Everything saved before this is safe.'); return false; }
+    lastRaw = r.raw;
     ctx.state = next;
     return true;
   },
   go(hash) { location.hash = hash; },
 };
+
+// Another HiveMind tab saved: reload so this tab never works from (and overwrites with) old data.
+addEventListener('storage', e => { if (e.key === KEY) location.reload(); });
 
 const SCREENS = ['dashboard', 'session', 'library', 'palace', 'backup', 'welcome', 'drill'];
 

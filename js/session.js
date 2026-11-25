@@ -9,10 +9,12 @@ export function benchmarkDue(state, today) {
 }
 
 const todayRecord = (state, today) => state.sessions.find(s => s.day === today);
+// A benchmark saved today counts as done even if the app closed before the step was marked.
+const doneIds = (state, done, today) => new Set([...done, ...(state.benchmarks.at(-1)?.day === today ? ['benchmark'] : [])]);
 
 export function buildSteps(state, today) {
   const rec = todayRecord(state, today);
-  if (rec) return rec.completed ? [] : rec.plan.filter(id => !rec.done.includes(id));
+  if (rec) { const done = doneIds(state, rec.done, today); return rec.completed ? [] : rec.plan.filter(id => !done.has(id)); }
   return [...(benchmarkDue(state, today) ? ['benchmark'] : []), 'cue', 'reviews', ...DRILLS];
 }
 
@@ -26,7 +28,8 @@ export function startDay(state, today) {
 export function markDone(state, stepId, today) {
   const rec = todayRecord(startDay(state, today), today);
   const done = rec.done.includes(stepId) ? rec.done : [...rec.done, stepId];
-  const next = { ...rec, done, completed: rec.plan.every(id => done.includes(id)) };
+  const all = doneIds(state, done, today);
+  const next = { ...rec, done, completed: rec.plan.every(id => all.has(id)) };
   return { ...state, sessions: [...state.sessions.filter(s => s.day !== today), next] };
 }
 
