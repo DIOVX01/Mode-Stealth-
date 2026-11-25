@@ -121,3 +121,7 @@ form.panel label { margin: var(--s-2) 0 0; }
 .cards { margin-top: var(--s-3); }
 .card-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: var(--s-3); align-items: center; padding: var(--s-2) 0; border-bottom: 1px solid var(--line); }
 .card-text { min-width: 0; overflow-wrap: anywhere; }
+.scores { display: grid; grid-template-columns: max-content max-content; gap: var(--s-2) var(--s-5); text-align: left; margin: 0 auto var(--s-3); }
+.scores dt { color: var(--muted); }
+.scores dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+.session-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; }

@@ -37,3 +37,26 @@ test('backup due 7 days after install when never backed up', () => {
   assert.equal(backupDue(st({ createdAt: '2026-11-18' }), T), true);
   assert.equal(backupDue(st({ createdAt: '2026-11-20' }), T), false);
 });
+
+import { cueTarget } from '../js/session.js';
+import { rng } from '../js/rng.js';
+test('cue lands on a drill at least two steps after the cue step', () => {
+  const plan = ['benchmark', 'cue', 'reviews', ...DRILLS];
+  for (let seed = 1; seed < 200; seed++) {
+    const t = cueTarget(plan, rng(seed));
+    assert.ok(DRILLS.includes(t)); assert.ok(plan.indexOf(t) >= plan.indexOf('cue') + 2);
+  }
+});
+test('cue target is null when no drill follows', () => assert.equal(cueTarget(['cue', 'reviews'], rng(1)), null));
+
+import { startDay } from '../js/session.js';
+test('plan keeps the benchmark even though it is saved before being marked done', () => {
+  let s = startDay(st(), T);
+  s = { ...s, benchmarks: [{ day: T, scores: {} }] };
+  s = markDone(s, 'benchmark', T);
+  assert.deepEqual(s.sessions.at(-1).plan, ['benchmark', 'cue', 'reviews', ...DRILLS]);
+});
+test('startDay leaves an existing record alone', () => {
+  const s = markDone(st(), 'benchmark', T);
+  assert.equal(startDay(s, T), s);
+});

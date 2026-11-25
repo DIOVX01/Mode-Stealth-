@@ -16,8 +16,15 @@ export function buildSteps(state, today) {
   return [...(benchmarkDue(state, today) ? ['benchmark'] : []), 'cue', 'reviews', ...DRILLS];
 }
 
+// Fix today's plan when the session starts: the benchmark saves its scores before it is marked done,
+// and a plan computed after that would no longer include it.
+export function startDay(state, today) {
+  if (todayRecord(state, today)) return state;
+  return { ...state, sessions: [...state.sessions, { day: today, plan: buildSteps(state, today), done: [], completed: false }] };
+}
+
 export function markDone(state, stepId, today) {
-  const rec = todayRecord(state, today) ?? { day: today, plan: buildSteps(state, today), done: [], completed: false };
+  const rec = todayRecord(startDay(state, today), today);
   const done = rec.done.includes(stepId) ? rec.done : [...rec.done, stepId];
   const next = { ...rec, done, completed: rec.plan.every(id => done.includes(id)) };
   return { ...state, sessions: [...state.sessions.filter(s => s.day !== today), next] };
@@ -38,3 +45,9 @@ export function streak(state, today) {
 }
 
 export const backupDue = (state, today) => daysBetween(state.lastBackupAt ?? state.createdAt, today) >= 7;
+
+// The remember-to-do cue fires inside a drill at least two steps after it was set.
+export function cueTarget(plan, r) {
+  const later = plan.slice(plan.indexOf('cue') + 2).filter(id => DRILLS.includes(id));
+  return later.length ? later[Math.floor(r() * later.length)] : null;
+}
