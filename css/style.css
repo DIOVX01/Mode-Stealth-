@@ -110,3 +110,14 @@ button.cell[aria-pressed="true"] { background: var(--signal); color: var(--on-si
 .locus { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-3); align-items: center; margin-bottom: var(--s-2); }
 .locus label { margin: 0; color: var(--text); text-align: left; }
 .locus input { text-align: left; margin: 0; }
+.face { border-radius: var(--r-2); object-fit: cover; }
+.card-front { font-size: 22px; line-height: 1.4; max-width: 40ch; }
+.card-back { font-size: 20px; color: var(--signal); max-width: 44ch; }
+.reading { white-space: pre-wrap; text-align: left; max-width: 68ch; line-height: 1.7; }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: var(--s-4); text-align: left; width: 100%; }
+form.panel { display: grid; gap: var(--s-2); }
+form.panel h2 { margin-top: 0; }
+form.panel label { margin: var(--s-2) 0 0; }
+.cards { margin-top: var(--s-3); }
+.card-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: var(--s-3); align-items: center; padding: var(--s-2) 0; border-bottom: 1px solid var(--line); }
+.card-text { min-width: 0; overflow-wrap: anywhere; }
